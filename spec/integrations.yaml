@@ -1,0 +1,156 @@
+# Published integration catalog — memory-service component spec v1.7.0
+# Consumed by docs site IA, llms.txt generation, and landing tier-gated logos.
+# Schema version: 1
+
+schema_version: 1
+component_spec_version: "1.7.0"
+last_updated: "2026-06-25"
+
+integrations:
+  - harness_id: claude-code
+    display_name: Claude Code
+    tier: A
+    tier_target: A
+    mechanisms:
+      - mcp
+      - hooks
+    config_paths:
+      - .mcp.json
+      - examples/claude-code/.mcp.json
+    connect_command: null
+    example_path: examples/claude-code
+    smoke_entrypoint: examples/claude-code/demo/phase3-smoke.sh
+    docs_path: /docs/integrations/claude-code
+
+  - harness_id: claude-code-plugin
+    display_name: Claude Code plugin
+    tier: A
+    tier_target: A
+    mechanisms:
+      - plugin
+      - mcp
+      - hooks
+    config_paths:
+      - examples/claude-code-plugin/.mcp.json
+      - examples/claude-code-plugin/.claude-plugin/plugin.json
+    connect_command: null
+    example_path: examples/claude-code-plugin
+    smoke_entrypoint: null
+    docs_path: /docs/integrations/claude-code-plugin
+
+  - harness_id: copilot-cli
+    display_name: Copilot CLI
+    tier: B
+    tier_target: B
+    mechanisms:
+      - mcp
+    config_paths:
+      - ~/.copilot/mcp-config.json
+      - .copilot/mcp-config.json
+    connect_command: ai-memory connect copilot
+    example_path: examples/copilot
+    smoke_entrypoint: examples/copilot/demo/copilot-smoke.sh
+    docs_path: /docs/integrations/copilot-cli
+
+  - harness_id: codex
+    display_name: Codex
+    tier: B
+    tier_target: B
+    mechanisms:
+      - mcp
+    config_paths:
+      - ~/.codex/config.toml
+      - .codex/config.toml
+    connect_command: ai-memory connect codex
+    example_path: examples/codex
+    smoke_entrypoint: examples/codex/demo/codex-smoke.sh
+    docs_path: /docs/integrations/codex
+
+  - harness_id: hermes
+    display_name: Hermes
+    tier: A
+    tier_target: A
+    mechanisms:
+      - adapter
+    config_paths:
+      - adapters/hermes/
+    connect_command: null
+    example_path: adapters/hermes
+    smoke_entrypoint: null
+    docs_path: /docs/integrations/hermes
+
+  - harness_id: openclaw
+    display_name: OpenClaw
+    tier: A
+    tier_target: A
+    mechanisms:
+      - adapter
+    config_paths:
+      - adapters/openclaw/
+    connect_command: null
+    example_path: adapters/openclaw
+    smoke_entrypoint: null
+    docs_path: /docs/integrations/openclaw
+
+  - harness_id: cursor
+    display_name: Cursor
+    tier: B
+    tier_target: B
+    mechanisms:
+      - mcp
+    config_paths:
+      - .cursor/mcp.json
+      - ~/.cursor/mcp.json
+    connect_command: ai-memory connect cursor
+    example_path: examples/cursor
+    smoke_entrypoint: examples/cursor/demo/cursor-smoke.sh
+    docs_path: /docs/integrations/cursor
+
+  - harness_id: windsurf
+    display_name: Windsurf
+    tier: B
+    tier_target: B
+    mechanisms:
+      - mcp
+    config_paths:
+      - ~/.codeium/windsurf/mcp_config.json
+    connect_command: ai-memory connect windsurf
+    example_path: examples/windsurf
+    smoke_entrypoint: examples/windsurf/demo/windsurf-smoke.sh
+    docs_path: /docs/integrations/windsurf
+
+  - harness_id: vscode-copilot-agent
+    display_name: VS Code + Copilot Agent
+    tier: D
+    tier_target: B
+    mechanisms:
+      - mcp
+    config_paths: []
+    connect_command: null
+    example_path: null
+    smoke_entrypoint: null
+    docs_path: null
+
+  - harness_id: copilot-ide
+    display_name: Copilot IDE
+    tier: D
+    tier_target: B
+    mechanisms:
+      - mcp
+    config_paths: []
+    connect_command: null
+    example_path: null
+    smoke_entrypoint: null
+    docs_path: null
+
+  - harness_id: gemini-cli
+    display_name: Gemini CLI
+    tier: D
+    tier_target: B
+    mechanisms:
+      - mcp
+    config_paths: []
+    connect_command: null
+    example_path: null
+    smoke_entrypoint: null
+    docs_path: null

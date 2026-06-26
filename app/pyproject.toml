@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "memory-service"
+version = "1.7.0"
+description = "Governed memory service MCP server"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+memory-service-stdio = "memory_service.server:main"
+memory-service-stdio-production = "memory_service.server:main_production"
+memory-service-export = "export_memory:main"
+memory-service-import = "import_markdown:main"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+py-modules = ["export_memory", "import_markdown"]
+
+[tool.setuptools.packages.find]
+where = ["."]

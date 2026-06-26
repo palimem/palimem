@@ -1,0 +1,16 @@
+{
+  "name": "memory-service",
+  "displayName": "Palimem",
+  "version": "1.7.0",
+  "description": "Local-first governed memory for Claude Code via MCP and lifecycle hooks.",
+  "author": {
+    "name": "Palimem contributors",
+    "url": "https://github.com/palimem/palimem"
+  },
+  "homepage": "https://palimem.com/docs/integrations/claude-code-plugin",
+  "repository": "https://github.com/palimem/palimem",
+  "license": "Apache-2.0",
+  "keywords": ["memory", "mcp", "hooks", "agent", "palimem"],
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
+}

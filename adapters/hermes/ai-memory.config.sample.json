@@ -1,0 +1,9 @@
+{
+  "data_dir": "/absolute/path/to/workspace/.ai-memory/data",
+  "namespace": "workspace-name",
+  "recall_mode": "hybrid",
+  "mirror_builtin_memory": false,
+  "prefetch_limit": 5,
+  "sync_turn_enabled": true,
+  "profile_engine_enabled": false
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "memory-service": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/vendor/app/scripts/memory-service-mcp.js"],
+      "env": {
+        "MEMORY_SERVICE_DATA_DIR": "${CLAUDE_PROJECT_DIR}/.ai-memory/data"
+      }
+    }
+  }
+}

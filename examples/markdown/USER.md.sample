@@ -1,0 +1,12 @@
+# User profile
+
+## Preferences
+
+- Prefers Python over JavaScript for backend services
+- Timezone: US/Pacific
+- editor: VS Code with Vim keybindings
+
+## Working style
+
+- Writes tests before implementation when the spec is published
+- Keeps pull requests focused on one concern

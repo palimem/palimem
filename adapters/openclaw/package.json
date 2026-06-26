@@ -1,0 +1,10 @@
+{
+  "name": "@gem-orchestration/ai-memory-openclaw",
+  "version": "1.5.0",
+  "type": "module",
+  "main": "index.js",
+  "description": "OpenClaw memory adapter backed by memory-service",
+  "peerDependencies": {
+    "openclaw": "*"
+  }
+}

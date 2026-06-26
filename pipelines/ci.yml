@@ -1,0 +1,74 @@
+# memory-service component CI
+# Validates and verifies the Docker image build on changes under components/memory-service/.
+# Onboarding placeholders: replace <build-agent-pool>, registry values in cd.yml.
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - components/memory-service/**
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - components/memory-service/**
+
+pool:
+  name: '<build-agent-pool>'
+  demands:
+    - Agent.OS -equals Linux
+
+variables:
+  componentName: memory-service
+  specVersion: '1.6.0'
+  dockerImage: memory-service
+
+stages:
+  - stage: Validate
+    displayName: Component validation
+    jobs:
+      - job: BlackBoxSuite
+        displayName: Black-box validation (111 behaviors)
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.13'
+            displayName: Use Python 3.13
+
+          - script: python3 components/memory-service/tests/run_validation.py
+            displayName: Run component validation entrypoint
+
+          - task: PublishPipelineArtifact@1
+            condition: always()
+            inputs:
+              targetPath: components/memory-service/tests/artifacts
+              artifact: memory-service-validation-results
+              publishLocation: pipeline
+            displayName: Publish validation artifacts
+
+  - stage: Build
+    displayName: Docker build verification
+    dependsOn: Validate
+    jobs:
+      - job: DockerBuild
+        displayName: Build production image
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - script: |
+              set -euo pipefail
+              docker build \
+                -t $(dockerImage):$(specVersion) \
+                -f components/memory-service/Dockerfile \
+                components/memory-service
+              docker image inspect $(dockerImage):$(specVersion) >/dev/null
+            displayName: docker build memory-service:$(specVersion)

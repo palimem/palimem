@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "memory-service": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/app/scripts/memory-service-mcp.js"
+      ],
+      "env": {
+        "MEMORY_SERVICE_DATA_DIR": "${workspaceFolder}/.ai-memory/data"
+      }
+    }
+  }
+}

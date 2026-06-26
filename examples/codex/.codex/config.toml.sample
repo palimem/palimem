@@ -1,0 +1,12 @@
+# Project-scoped Codex MCP config for memory-service.
+# Copy to <your-repo>/.codex/config.toml (trusted project required).
+#
+# Replace /absolute/path/to/your/repo with your workspace root.
+
+[mcp_servers.memory-service]
+enabled = true
+command = "node"
+args = ["/absolute/path/to/your/repo/app/scripts/memory-service-mcp.js"]
+
+[mcp_servers.memory-service.env]
+MEMORY_SERVICE_DATA_DIR = "/absolute/path/to/your/repo/.ai-memory/data"

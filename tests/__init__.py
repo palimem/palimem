@@ -1,0 +1,1 @@
+"""Black-box validation suite for the memory-service component."""

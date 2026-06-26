@@ -1,0 +1,15 @@
+# Project memory
+
+## Architecture
+
+- API v2 is canonical; v1 endpoints are deprecated
+- Runnable services live under components/<name>/
+
+## Procedures
+
+- Run component validation with tests/run_validation.py
+- Root integration uses deploy/local/launch-gem.ps1 with GEM_SYSTEM_DATA_DIR set
+
+## Constraints
+
+- Do not use EnsureCreated() for database upgrades; use EF Core migrations at the app layer when applicable

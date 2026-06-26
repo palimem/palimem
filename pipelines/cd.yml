@@ -1,0 +1,77 @@
+# memory-service component CD
+# Publishes immutable and floating spec-version image tags after successful CI on main.
+# Onboarding placeholders:
+#   <build-agent-pool>
+#   <registry-service-connection>
+#   registry-host / registry-namespace / project-prefix
+
+trigger: none
+
+resources:
+  pipelines:
+    - pipeline: memory-service-ci
+      source: memory-service-ci
+      trigger:
+        branches:
+          include:
+            - main
+
+pool:
+  name: '<build-agent-pool>'
+  demands:
+    - Agent.OS -equals Linux
+
+variables:
+  componentName: memory-service
+  specVersion: '1.6.0'
+  registryHost: registry-host.invalid
+  registryNamespace: registry-namespace
+  projectPrefix: project-prefix
+  imageRepository: '$(registryHost)/$(registryNamespace)/$(projectPrefix)-memory-service'
+
+stages:
+  - stage: Publish
+    displayName: Publish release image
+    jobs:
+      - job: PushImage
+        displayName: Build and push Docker image
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - script: |
+              set -euo pipefail
+              REVISION=0
+              if [ -f components/memory-service/.state/image-revision ]; then
+                REVISION="$(tr -d '[:space:]' < components/memory-service/.state/image-revision)"
+              fi
+              echo "##vso[task.setvariable variable=imageRevision]$REVISION"
+              IMMUTABLE_TAG="$(specVersion).$REVISION"
+              echo "##vso[task.setvariable variable=immutableTag]$IMMUTABLE_TAG"
+            displayName: Resolve image revision
+
+          - script: |
+              set -euo pipefail
+              docker build \
+                -t $(imageRepository):$(immutableTag) \
+                -t $(imageRepository):$(specVersion) \
+                -f components/memory-service/Dockerfile \
+                components/memory-service
+            displayName: docker build release tags
+
+          - task: Docker@2
+            displayName: Push immutable tag
+            inputs:
+              containerRegistry: '<registry-service-connection>'
+              repository: '$(registryNamespace)/$(projectPrefix)-memory-service'
+              command: push
+              tags: |
+                $(immutableTag)
+
+          - task: Docker@2
+            displayName: Push floating spec tag
+            inputs:
+              containerRegistry: '<registry-service-connection>'
+              command: push
+              tags: |
+                $(specVersion)

@@ -1,0 +1,12 @@
+{
+  "user_md_probes": [
+    {"query": "Python backend services", "needle": "Python"},
+    {"query": "timezone preference", "needle": "Pacific"},
+    {"query": "editor keybindings", "needle": "Vim"}
+  ],
+  "episode_probes": [
+    {"query": "concise answers", "needle": "concise"},
+    {"query": "dark theme preference", "needle": "dark"}
+  ],
+  "episode_transcript": "User prefers concise answers and dark themes for long coding sessions."
+}

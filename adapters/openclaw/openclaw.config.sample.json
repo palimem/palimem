@@ -1,0 +1,14 @@
+{
+  "plugins": {
+    "entries": {
+      "ai-memory": {
+        "data_dir": ".ai-memory/data",
+        "namespace": "workspace-name",
+        "import_workspace_markdown": false
+      }
+    },
+    "slots": {
+      "memory": "ai-memory"
+    }
+  }
+}

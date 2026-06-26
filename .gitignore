@@ -1,0 +1,30 @@
+# Build output
+bin/
+obj/
+out/
+dist/
+*.user
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Test run artifacts
+tests/artifacts/
+
+# IDE
+.vs/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local secrets / env
+*.env
+.env.local

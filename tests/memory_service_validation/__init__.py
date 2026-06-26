@@ -1,0 +1,1 @@
+"""Black-box validation harness for the memory-service component."""
