@@ -10,7 +10,7 @@ This suite is the black-box behavioral harness for the published `memory-service
 
 It derives assertions directly from the spec, does not read application source, talks only through the eleven published MCP tools plus the documented validation-only file control plane and the `ai-memory connect` CLI subprocess surface, and emits machine-readable results conforming to the repository Test Results Schema.
 
-The v1.7.0 revision preserves all 111 existing v1.6.0 behavior scenarios and adds 27 Phase 6 behaviors for the `ai-memory connect` CLI (copilot, cursor, windsurf, codex), integration catalog consistency, P0/P1 smoke script execution, and a backward-compatibility MCP surface marker.
+The v1.7.0 revision preserves all 111 existing v1.6.0 behavior scenarios and adds 32 Phase 6 behaviors for the `ai-memory connect` CLI (copilot, cursor, windsurf, codex, vscode, gemini), integration catalog consistency, P0/P1 smoke script execution, and a backward-compatibility MCP surface marker.
 
 ## Coverage
 
@@ -28,9 +28,9 @@ The v1.7.0 revision preserves all 111 existing v1.6.0 behavior scenarios and add
 | 17 | Profile engine opt-in, session summary bounds (including ellipsis prefix), `share_to` (get + search), context fencing post-conditions (known + unknown injection ids), memory_profile persona exclusion, memory_status operator metadata | 8 |
 | 18 | Phase 4 validation hints: profile assembly, reflection citations, persona isolation, backward compatibility spot-check | Covered in Phase 4 groups above |
 | 19, 20 | Graph derivation and rebuildability, trajectory parity and retraction visibility, PII block/redact, audit logging/export, legal hold, retention eviction, fleet mode visibility/lag policy, Phase 5-disabled backward compatibility | 26 |
-| 21, 21.8 | Phase 6 connect CLI: `connect copilot` (empty merge, clobber refusal, `--replace`, `--dry-run`, merge-with-others, relative data-dir); `connect cursor` (project + global targets, `--dry-run`, absolute `MEMORY_SERVICE_DATA_DIR`); `connect windsurf` (global `mcp_config.json`, clobber refusal, `--replace`, `--dry-run`); `connect codex` (TOML merge, clobber refusal, `--replace`, `--dry-run`); unsupported harness exit 2; catalog P0 completeness and tier-B `connect_command`; catalog P1 tier-D `tier_target B`; smoke scripts for claude-code, copilot-cli, codex, cursor, windsurf; MCP surface unchanged marker | 27 |
+| 21, 21.8 | Phase 6 connect CLI: `connect copilot` (empty merge, clobber refusal, `--replace`, `--dry-run`, merge-with-others, relative data-dir); `connect cursor` (project + global targets, `--dry-run`, absolute `MEMORY_SERVICE_DATA_DIR`); `connect windsurf` (global `mcp_config.json`, clobber refusal, `--replace`, `--dry-run`); `connect codex` (TOML merge, clobber refusal, `--replace`, `--dry-run`); `connect vscode` / `connect gemini` (`--dry-run`); unsupported harness exit 2; catalog P0 completeness and tier-B `connect_command`; catalog P1 tier-B delivery; smoke scripts for claude-code, copilot-cli, codex, cursor, windsurf, vscode-copilot-agent, copilot-ide, gemini-cli; MCP surface unchanged marker | 32 |
 
-**Total behavior cases:** 138
+**Total behavior cases:** 143
 
 ## Technology
 
@@ -92,7 +92,7 @@ Artifact format:
 - `connect windsurf` coverage: global `mcp_config.json` target; clobber refusal; `--replace` preserves other servers; `--dry-run`.  Windsurf does not support project-level MCP config.
 - `connect codex` coverage: TOML merge producing `[mcp_servers.memory-service]` + `[mcp_servers.memory-service.env]` with absolute `MEMORY_SERVICE_DATA_DIR`; clobber refusal; `--replace` preserves other TOML sections; `--dry-run`.  When `tomllib` is available (Python 3.11+), the TOML is structurally parsed; otherwise string-based assertions are used.
 - Unsupported harness: `ai-memory connect <unknown>` exits with code 2 via the Node.js wrapper.  When Node.js is unavailable, the test skips with an explicit reason message.
-- Catalog consistency: `integrations.yaml` must contain all eight P0 harness IDs at tier A or B; tier-B CLI-managed harnesses must carry a non-null `connect_command`; all three P1 harnesses (`vscode-copilot-agent`, `copilot-ide`, `gemini-cli`) must carry `tier D` and `tier_target B`.
+- Catalog consistency: `integrations.yaml` must contain all eight P0 harness IDs at tier A or B; tier-B CLI-managed harnesses must carry a non-null `connect_command`; all three P1 harnesses (`vscode-copilot-agent`, `copilot-ide`, `gemini-cli`) must be delivered at tier B with `tier_target B` and connect/smoke metadata.
 - Smoke scripts: all five P0 tier B+ harness smoke scripts (`claude-code/phase3-smoke.sh`, `copilot/copilot-smoke.sh`, `codex/codex-smoke.sh`, `cursor/cursor-smoke.sh`, `windsurf/windsurf-smoke.sh`) are run as non-interactive subprocesses.  Node-dependent scripts skip with an explicit message when Node is unavailable; the claude-code script is pure Python and always runs.
 - MCP backward-compatibility marker: explicitly asserts the eleven-tool MCP surface is unchanged after Phase 6 artifacts are loaded.
 - v1.6.0 extends the MCP surface to eleven tools with `memory_query_temporal` and `memory_audit_export`, while preserving the existing nine-tool v1.5.0 behavior when Phase 5 features are disabled or omitted.

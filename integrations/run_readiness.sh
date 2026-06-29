@@ -123,7 +123,18 @@ while IFS='|' read -r HARNESS_ID SMOKE_PATH; do
   fi
 
   echo "-- Running smoke for $HARNESS_ID: $SMOKE_ABS"
-  if bash "$SMOKE_ABS"; then
+  case "$SMOKE_ABS" in
+    *.py)
+      SMOKE_CMD=("$PYTHON" "$SMOKE_ABS")
+      ;;
+    *.mjs|*.js)
+      SMOKE_CMD=("node" "$SMOKE_ABS")
+      ;;
+    *)
+      SMOKE_CMD=("bash" "$SMOKE_ABS")
+      ;;
+  esac
+  if "${SMOKE_CMD[@]}"; then
     echo "PASS [$HARNESS_ID]"
     PASS=$((PASS + 1))
   else

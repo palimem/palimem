@@ -37,13 +37,20 @@ jobs:
         with:
           python-version: '3.13'
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Node MCP wrapper dependencies
+        working-directory: app
+        run: npm ci
+
       - name: Run integration readiness smokes
         run: bash integrations/run_readiness.sh
 
-  benchmarks:
-    name: benchmarks
+  phase6-readiness:
+    name: phase6-readiness
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -51,8 +58,29 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Run research benchmarks
-        run: python3 benchmarks/run_benchmarks.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Node MCP wrapper dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Run Phase 6 release readiness gate
+        run: bash examples/claude-code/demo/phase6-readiness.sh
+
+  benchmarks:
+    name: benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run research benchmarks (strict)
+        run: python3 benchmarks/run_benchmarks.py --strict
 
       - name: Upload benchmark artifacts
         if: always()

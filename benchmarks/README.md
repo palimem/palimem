@@ -28,7 +28,7 @@ Probe definitions live in `benchmarks/data/`.
 
 ## CI
 
-GitHub Actions runs benchmarks in a separate **non-blocking** job (`continue-on-error: true`) and uploads artifacts for trend tracking.
+GitHub Actions runs benchmarks in strict mode (`python3 benchmarks/run_benchmarks.py --strict`) as a blocking job alongside component validation, integration readiness, and the Phase 6 release gate.
 
 ## Environment
 
@@ -40,4 +40,4 @@ GitHub Actions runs benchmarks in a separate **non-blocking** job (`continue-on-
 
 - Normative validation: `python3 tests/run_validation.py`
 - Phase 4 exit benchmark: `bash examples/claude-code/demo/phase4-profile-benchmark.sh`
-- Release readiness gate: `bash examples/claude-code/demo/phase4-readiness.sh`
+- Release readiness gate: `bash examples/claude-code/demo/phase6-readiness.sh`

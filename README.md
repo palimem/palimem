@@ -38,7 +38,8 @@ node app/scripts/memory-service-mcp.js
 ```bash
 python3 tests/run_validation.py
 bash integrations/run_readiness.sh
-python3 benchmarks/run_benchmarks.py
+bash examples/claude-code/demo/phase6-readiness.sh
+python3 benchmarks/run_benchmarks.py --strict
 ```
 
 ## Layout
@@ -47,7 +48,7 @@ python3 benchmarks/run_benchmarks.py
 |------|---------|
 | `app/` | MCP server and `ai-memory` CLI |
 | `spec/` | Normative behavior contract |
-| `tests/` | Black-box validation (138 behaviors) |
+| `tests/` | Black-box validation (143 behaviors) |
 | `examples/` | Editor wiring examples |
 | `integrations/` | Integration readiness smokes |
 | `adapters/` | Hermes and OpenClaw plugins |

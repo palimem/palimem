@@ -1703,7 +1703,7 @@ The authoritative harness list is [integrations.yaml](./integrations.yaml). Each
 
 Phase 6 P0 entries (minimum catalog): `claude-code`, `claude-code-plugin`, `copilot-cli`, `codex`, `hermes`, `openclaw`, `cursor`, `windsurf`.
 
-Phase 6 P1 entries (tier D with `tier_target: B` in v1.7.0): `vscode-copilot-agent`, `copilot-ide`, `gemini-cli`.
+Phase 6 P1 entries (delivered at tier B in v1.7.0): `vscode-copilot-agent`, `copilot-ide`, `gemini-cli`.
 
 ### 21.4 Connect operator CLI
 
@@ -1721,6 +1721,8 @@ ai-memory connect <harness> [--project-root PATH] [--data-dir PATH] [--replace] 
 | `cursor` | `cursor` | `.cursor/mcp.json` (project) and/or `~/.cursor/mcp.json` (global) |
 | `windsurf` | `windsurf` | `~/.codeium/windsurf/mcp_config.json` (global only — Windsurf does not support project-level MCP) |
 | `codex` | `codex` | `~/.codex/config.toml` or project `.codex/config.toml` |
+| `vscode` | `vscode-copilot-agent`, `copilot-ide` | `.vscode/mcp.json` (`servers` object per VS Code MCP schema) |
+| `gemini` | `gemini-cli` | `~/.gemini/settings.json`; optional project `.gemini/settings.json` via `--project-config` |
 
 Invoking `ai-memory connect` with an unsupported `<harness>` shall exit with code `2` and print usage listing supported harnesses.
 

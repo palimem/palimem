@@ -76,7 +76,7 @@ integrations:
       - adapters/hermes/
     connect_command: null
     example_path: adapters/hermes
-    smoke_entrypoint: null
+    smoke_entrypoint: adapters/hermes/smoke-hermes-bridge.py
     docs_path: /docs/integrations/hermes
 
   - harness_id: openclaw
@@ -89,7 +89,7 @@ integrations:
       - adapters/openclaw/
     connect_command: null
     example_path: adapters/openclaw
-    smoke_entrypoint: null
+    smoke_entrypoint: adapters/openclaw/smoke-openclaw-bridge.mjs
     docs_path: /docs/integrations/openclaw
 
   - harness_id: cursor
