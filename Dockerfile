@@ -1,7 +1,7 @@
 FROM python:3.13-slim
 
-# Build as: docker build -t memory-service:1.6.0 .
-LABEL org.opencontainers.image.version="1.6.0"
+# Build as: docker build -t memory-service:1.7.0 .
+LABEL org.opencontainers.image.version="1.7.0"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
