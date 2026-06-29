@@ -38,6 +38,7 @@ node app/scripts/memory-service-mcp.js
 ```bash
 python3 tests/run_validation.py
 bash integrations/run_readiness.sh
+python3 benchmarks/run_benchmarks.py
 ```
 
 ## Layout

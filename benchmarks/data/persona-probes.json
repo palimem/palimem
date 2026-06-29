@@ -1,0 +1,38 @@
+{
+  "user_md_probes": [
+    {"id": "python-backend", "query": "Python backend services", "needle": "Python"},
+    {"id": "timezone", "query": "timezone preference", "needle": "Pacific"},
+    {"id": "editor", "query": "editor keybindings", "needle": "Vim"},
+    {"id": "paraphrase-language", "query": "backend language preference", "needle": "Python"},
+    {"id": "paraphrase-testing", "query": "how does the user write tests", "needle": "tests before implementation"}
+  ],
+  "episode_probes": [
+    {"id": "concise", "query": "concise answers", "needle": "concise"},
+    {"id": "dark-theme", "query": "dark theme preference", "needle": "dark"},
+    {"id": "paraphrase-brevity", "query": "answer length style", "needle": "concise"}
+  ],
+  "episode_transcript": "User prefers concise answers and dark themes for long coding sessions.",
+  "supersession_probes": [
+    {
+      "id": "city-supersession",
+      "scope": "repository",
+      "writes": [
+        {"memory_type": "fact", "topic": "user_profile", "field": "city", "value": "London"},
+        {"memory_type": "fact", "topic": "user_profile", "field": "city", "value": "Berlin"}
+      ],
+      "query": "user city",
+      "needle": "Berlin",
+      "exclude": "London"
+    }
+  ],
+  "noise_seed": [
+    {"memory_type": "fact", "topic": "distraction", "field": "n1", "value": "Kubernetes cluster sizing notes"},
+    {"memory_type": "fact", "topic": "distraction", "field": "n2", "value": "React component library migration"},
+    {"memory_type": "fact", "topic": "distraction", "field": "n3", "value": "Terraform module version pinning"},
+    {"memory_type": "fact", "topic": "distraction", "field": "n4", "value": "Postgres connection pool tuning"},
+    {"memory_type": "fact", "topic": "distraction", "field": "n5", "value": "GraphQL schema deprecation policy"}
+  ],
+  "noise_probes": [
+    {"id": "signal-in-noise-timezone", "query": "timezone preference", "needle": "Pacific"}
+  ]
+}

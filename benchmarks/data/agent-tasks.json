@@ -1,0 +1,86 @@
+{
+  "tasks": [
+    {
+      "id": "resume-timezone",
+      "description": "Agent recalls timezone from imported USER.md after starting a new session",
+      "scope": "user",
+      "import_user_md": true,
+      "query": "timezone preference",
+      "needle": "Pacific"
+    },
+    {
+      "id": "resume-editor-style",
+      "description": "Agent recalls editor preference from USER.md",
+      "scope": "user",
+      "import_user_md": true,
+      "query": "editor keybindings",
+      "needle": "Vim"
+    },
+    {
+      "id": "resume-testing-style",
+      "description": "Agent recalls working-style fact from USER.md",
+      "scope": "user",
+      "import_user_md": true,
+      "query": "writes tests before implementation",
+      "needle": "tests before implementation"
+    },
+    {
+      "id": "supersession-current-value",
+      "description": "Agent gets the current city after a governed superseding write",
+      "scope": "repository",
+      "writes": [
+        {"memory_type": "fact", "topic": "project", "field": "primary_region", "value": "us-east-1"},
+        {"memory_type": "fact", "topic": "project", "field": "primary_region", "value": "eu-west-1"}
+      ],
+      "query": "project primary region",
+      "needle": "eu-west-1",
+      "exclude": "us-east-1"
+    },
+    {
+      "id": "session-episode-recall",
+      "description": "Agent recalls a session episode written earlier in the task",
+      "scope": "session",
+      "writes": [
+        {
+          "memory_type": "episode",
+          "topic": "session_turn",
+          "field": "turn",
+          "value": "We decided to use SQLite WAL mode for local-first agent memory."
+        }
+      ],
+      "query": "SQLite WAL local-first",
+      "needle": "SQLite WAL",
+      "include_episodes": true
+    },
+    {
+      "id": "repository-decision-recall",
+      "description": "Agent recalls a repository-scoped architecture decision",
+      "scope": "repository",
+      "writes": [
+        {
+          "memory_type": "belief",
+          "topic": "architecture",
+          "field": "storage",
+          "value": "Governed semantic units over ad-hoc markdown grep."
+        }
+      ],
+      "query": "architecture storage decision",
+      "needle": "semantic units"
+    },
+    {
+      "id": "compact-survival",
+      "description": "Critical user preference remains recallable alongside repository noise",
+      "scope": "user",
+      "import_user_md": true,
+      "noise_writes": [
+        {"memory_type": "fact", "topic": "noise", "field": "n1", "value": "Unrelated CI cache tuning note"},
+        {"memory_type": "fact", "topic": "noise", "field": "n2", "value": "Unrelated frontend bundle analyzer output"},
+        {"memory_type": "fact", "topic": "noise", "field": "n3", "value": "Unrelated database index rebuild schedule"},
+        {"memory_type": "fact", "topic": "noise", "field": "n4", "value": "Unrelated feature flag cleanup checklist"},
+        {"memory_type": "fact", "topic": "noise", "field": "n5", "value": "Unrelated on-call rotation handoff"}
+      ],
+      "query": "Python backend services",
+      "needle": "Python"
+    }
+  ]
+}

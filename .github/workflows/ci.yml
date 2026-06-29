@@ -39,3 +39,24 @@ jobs:
 
       - name: Run integration readiness smokes
         run: bash integrations/run_readiness.sh
+
+  benchmarks:
+    name: benchmarks
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run research benchmarks
+        run: python3 benchmarks/run_benchmarks.py
+
+      - name: Upload benchmark artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmarks/artifacts/
