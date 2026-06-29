@@ -4,7 +4,6 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
-REPO_ROOT="$(cd "$ROOT/../.." && pwd)"
 DEMO="$(dirname "$0")"
 PYTHON="${MEMORY_SERVICE_PYTHON:-python3}"
 NODE="${MEMORY_SERVICE_NODE:-node}"

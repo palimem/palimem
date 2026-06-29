@@ -10,9 +10,10 @@ import tempfile
 import time
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-BRIDGE = REPO_ROOT / "components/memory-service/adapters/hermes/run_validation_bridge.py"
-APP = REPO_ROOT / "components/memory-service/app"
+ADAPTER_ROOT = Path(__file__).resolve().parent
+REPO_ROOT = ADAPTER_ROOT.parent.parent
+BRIDGE = ADAPTER_ROOT / "run_validation_bridge.py"
+APP = REPO_ROOT / "app"
 
 
 def request(process: subprocess.Popen[str], payload: dict) -> dict:
@@ -21,7 +22,9 @@ def request(process: subprocess.Popen[str], payload: dict) -> dict:
     process.stdin.flush()
     line = process.stdout.readline()
     if not line.strip():
-        raise RuntimeError("hermes bridge closed stdout unexpectedly")
+        stderr = process.stderr.read() if process.stderr else ""
+        detail = stderr.strip() or "hermes bridge closed stdout unexpectedly"
+        raise RuntimeError(detail)
     response = json.loads(line)
     if response.get("ok") is False:
         raise RuntimeError(json.dumps(response.get("error", response)))
@@ -33,11 +36,9 @@ def main() -> int:
         workspace = Path(workspace_dir)
         data_dir = workspace / ".ai-memory" / "data"
         namespace = workspace.name
-        command = f"{sys.executable} {BRIDGE}"
         env = {**dict(__import__("os").environ), "PYTHONPATH": f"{BRIDGE.parent}:{APP}"}
         process = subprocess.Popen(
-            command,
-            shell=True,
+            [sys.executable, str(BRIDGE)],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
