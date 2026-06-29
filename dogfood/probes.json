@@ -1,0 +1,48 @@
+{
+  "namespace": "palimem",
+  "probes": [
+    {
+      "id": "release-gate",
+      "prompt": "What is the current release gate and how do I run it?",
+      "search_query": "release gate",
+      "scope": "repository",
+      "needles": ["phase6-readiness.sh", "phase6-readiness"]
+    },
+    {
+      "id": "mcp-layout",
+      "prompt": "Where do the MCP server and connect CLI live in this repo?",
+      "search_query": "MCP server connect CLI",
+      "scope": "repository",
+      "needles": ["app/scripts", "app/"]
+    },
+    {
+      "id": "gemini-cli",
+      "prompt": "How do I add Gemini CLI integration?",
+      "search_query": "Gemini CLI integration",
+      "scope": "repository",
+      "needles": ["gemini", "connect gemini"]
+    },
+    {
+      "id": "integration-node",
+      "prompt": "Integration readiness fails on MCP smokes — what needs Node?",
+      "search_query": "integration readiness MCP node npm",
+      "scope": "repository",
+      "needles": ["npm", "node", "memory-service-mcp", "app/"]
+    },
+    {
+      "id": "validation-count",
+      "prompt": "How many validation behaviors does spec 1.7.0 require?",
+      "search_query": "validation behaviors spec 1.7.0",
+      "scope": "repository",
+      "needles": ["143", "run_validation.py"]
+    },
+    {
+      "id": "user-phase6-habit",
+      "prompt": "What do I run before pushing release changes?",
+      "search_query": "phase6 readiness before push",
+      "scope": "user",
+      "needles": ["phase6-readiness", "phase6"]
+    }
+  ],
+  "anti_needles": ["components/memory-service/", "phase4-readiness.sh"]
+}

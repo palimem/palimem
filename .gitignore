@@ -28,3 +28,7 @@ Thumbs.db
 # Local secrets / env
 *.env
 .env.local
+
+# Palimem dogfood (local SQLite WAL + optional Cursor MCP config)
+.ai-memory/
+.cursor/

@@ -40,6 +40,7 @@ python3 tests/run_validation.py
 bash integrations/run_readiness.sh
 bash examples/claude-code/demo/phase6-readiness.sh
 python3 benchmarks/run_benchmarks.py --strict
+bash dogfood/run_automated.sh   # optional maintainer dogfood probes
 ```
 
 ## Layout
@@ -51,4 +52,5 @@ python3 benchmarks/run_benchmarks.py --strict
 | `tests/` | Black-box validation (143 behaviors) |
 | `examples/` | Editor wiring examples |
 | `integrations/` | Integration readiness smokes |
+| `dogfood/` | Optional maintainer dogfood probes and sample memory |
 | `adapters/` | Hermes and OpenClaw plugins |
