@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "memory-service": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/absolute/path/to/your/repo/app/scripts/memory-service-mcp.js"],
+      "env": {
+        "MEMORY_SERVICE_DATA_DIR": "/absolute/path/to/your/repo/.ai-memory/data"
+      }
+    }
+  }
+}

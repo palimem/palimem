@@ -33,6 +33,8 @@ CONNECT_COPILOT = APP_DIR / "connect_copilot.py"
 CONNECT_CURSOR = APP_DIR / "connect_cursor.py"
 CONNECT_WINDSURF = APP_DIR / "connect_windsurf.py"
 CONNECT_CODEX = APP_DIR / "connect_codex.py"
+CONNECT_VSCODE = APP_DIR / "connect_vscode.py"
+CONNECT_GEMINI = APP_DIR / "connect_gemini.py"
 AI_MEMORY_JS = APP_DIR / "scripts" / "ai-memory.js"
 MCP_JS = APP_DIR / "scripts" / "memory-service-mcp.js"
 INTEGRATIONS_YAML = SPEC_DIR / "integrations.yaml"
@@ -64,6 +66,9 @@ _TIER_B_CLI_HARNESS_IDS = frozenset({
     "codex",
     "cursor",
     "windsurf",
+    "vscode-copilot-agent",
+    "copilot-ide",
+    "gemini-cli",
 })
 
 # ---------------------------------------------------------------------------
@@ -182,6 +187,47 @@ def _assert_mcp_server_entry(config: dict[str, Any]) -> dict[str, Any]:
     )
     entry = servers["memory-service"]
     ensure(isinstance(entry, dict), f"mcpServers.memory-service must be a JSON object.")
+    ensure(
+        entry.get("command") == "node",
+        f"memory-service entry must set command='node'. Got: {entry.get('command')!r}",
+    )
+    args = entry.get("args")
+    ensure(isinstance(args, list) and args, "memory-service entry must include a non-empty 'args' list.")
+    env_block = entry.get("env")
+    ensure(
+        isinstance(env_block, dict),
+        f"memory-service entry must include an 'env' object. Got: {env_block!r}",
+    )
+    data_dir = env_block.get("MEMORY_SERVICE_DATA_DIR")
+    ensure(
+        isinstance(data_dir, str) and data_dir,
+        f"memory-service env must include MEMORY_SERVICE_DATA_DIR. Got: {data_dir!r}",
+    )
+    ensure(
+        Path(data_dir).is_absolute(),
+        f"MEMORY_SERVICE_DATA_DIR must be an absolute path. Got: {data_dir!r}",
+    )
+    return entry
+
+
+def _assert_vscode_server_entry(config: dict[str, Any]) -> dict[str, Any]:
+    """Assert the config has a well-formed servers.memory-service entry (VS Code mcp.json)."""
+    ensure(
+        "servers" in config,
+        f"Config must have a top-level 'servers' key. Keys present: {list(config.keys())}",
+    )
+    servers = config["servers"]
+    ensure(isinstance(servers, dict), f"servers must be a JSON object. Got: {type(servers).__name__}")
+    ensure(
+        "memory-service" in servers,
+        f"servers must contain 'memory-service'. Keys present: {list(servers.keys())}",
+    )
+    entry = servers["memory-service"]
+    ensure(isinstance(entry, dict), "servers.memory-service must be a JSON object.")
+    ensure(
+        entry.get("type") == "stdio",
+        f"memory-service entry must set type='stdio'. Got: {entry.get('type')!r}",
+    )
     ensure(
         entry.get("command") == "node",
         f"memory-service entry must set command='node'. Got: {entry.get('command')!r}",
@@ -888,11 +934,20 @@ _SMOKE_SCRIPTS: dict[str, Path] = {
     "codex": REPO_ROOT / "examples/codex/demo/codex-smoke.sh",
     "cursor": REPO_ROOT / "examples/cursor/demo/cursor-smoke.sh",
     "windsurf": REPO_ROOT / "examples/windsurf/demo/windsurf-smoke.sh",
+    "vscode-copilot-agent": REPO_ROOT / "examples/vscode-copilot-agent/demo/vscode-copilot-smoke.sh",
+    "copilot-ide": REPO_ROOT / "examples/copilot-ide/demo/copilot-ide-smoke.sh",
+    "gemini-cli": REPO_ROOT / "examples/gemini-cli/demo/gemini-smoke.sh",
 }
 
 # Smoke scripts that drive node memory-service-mcp.js and therefore require Node
 _SMOKE_REQUIRES_NODE: frozenset[str] = frozenset({
-    "copilot-cli", "codex", "cursor", "windsurf",
+    "copilot-cli",
+    "codex",
+    "cursor",
+    "windsurf",
+    "vscode-copilot-agent",
+    "copilot-ide",
+    "gemini-cli",
 })
 
 
@@ -966,6 +1021,21 @@ def case_smoke_cursor(ctx: "ValidationHarness") -> str:
 def case_smoke_windsurf(ctx: "ValidationHarness") -> str:
     """P6-SMK5: windsurf smoke script exits 0 (memory_status via node MCP stdio)."""
     return _run_smoke("windsurf")
+
+
+def case_smoke_vscode_copilot_agent(ctx: "ValidationHarness") -> str:
+    """P6-SMK6: vscode-copilot-agent smoke script exits 0 (memory_status via node MCP stdio)."""
+    return _run_smoke("vscode-copilot-agent")
+
+
+def case_smoke_copilot_ide(ctx: "ValidationHarness") -> str:
+    """P6-SMK7: copilot-ide smoke script exits 0 (same MCP surface as VS Code)."""
+    return _run_smoke("copilot-ide")
+
+
+def case_smoke_gemini_cli(ctx: "ValidationHarness") -> str:
+    """P6-SMK8: gemini-cli smoke script exits 0 (memory_status via node MCP stdio)."""
+    return _run_smoke("gemini-cli")
 
 
 # ===========================================================================
@@ -1143,7 +1213,7 @@ def case_connect_copilot_merge_existing_with_others(ctx: "ValidationHarness") ->
 
 
 def case_catalog_p1_entries_have_tier_target_b(ctx: "ValidationHarness") -> str:
-    """P6-CAT3: integrations.yaml P1 tier-D entries carry tier_target B per Section 21.1."""
+    """P6-CAT3: integrations.yaml P1 entries are delivered at tier B with tier_target B."""
     ensure(
         INTEGRATIONS_YAML.is_file(),
         f"integrations.yaml not found at: {INTEGRATIONS_YAML}",
@@ -1154,27 +1224,46 @@ def case_catalog_p1_entries_have_tier_target_b(ctx: "ValidationHarness") -> str:
     missing: list[str] = []
     wrong_tier: list[str] = []
     wrong_target: list[str] = []
+    missing_connect: list[str] = []
+    missing_smoke: list[str] = []
 
     for hid in _P1_HARNESS_IDS:
         if hid not in by_id:
             missing.append(hid)
             continue
         entry = by_id[hid]
-        if entry.get("tier") != "D":
-            wrong_tier.append(f"{hid!r}: tier={entry.get('tier')!r} (expected D)")
-        if entry.get("tier_target") != "B":
-            wrong_target.append(f"{hid!r}: tier_target={entry.get('tier_target')!r} (expected B)")
+        tier = entry.get("tier")
+        if tier == "D":
+            if entry.get("tier_target") != "B":
+                wrong_target.append(f"{hid!r}: tier_target={entry.get('tier_target')!r} (expected B)")
+        elif tier == "B":
+            if entry.get("tier_target") != "B":
+                wrong_target.append(f"{hid!r}: tier_target={entry.get('tier_target')!r} (expected B)")
+            if not entry.get("connect_command"):
+                missing_connect.append(hid)
+            if not entry.get("smoke_entrypoint"):
+                missing_smoke.append(hid)
+        else:
+            wrong_tier.append(f"{hid!r}: tier={tier!r} (expected B or D)")
 
     ensure(not missing, f"P1 harness IDs missing from catalog: {sorted(missing)}")
-    ensure(not wrong_tier, "P1 entries must carry tier D:\n" + "\n".join(wrong_tier))
+    ensure(not wrong_tier, "P1 entries must be tier B (delivered) or tier D (planned):\n" + "\n".join(wrong_tier))
     ensure(
         not wrong_target,
-        "P1 tier-D entries must carry tier_target B per Section 21.1:\n" + "\n".join(wrong_target),
+        "P1 entries must carry tier_target B per Section 21.1:\n" + "\n".join(wrong_target),
+    )
+    ensure(
+        not missing_connect,
+        "Delivered tier-B P1 harnesses must declare connect_command:\n" + "\n".join(missing_connect),
+    )
+    ensure(
+        not missing_smoke,
+        "Delivered tier-B P1 harnesses must declare smoke_entrypoint:\n" + "\n".join(missing_smoke),
     )
 
     return (
         f"All {len(_P1_HARNESS_IDS)} P1 harness IDs are present in integrations.yaml "
-        "at tier D with tier_target B."
+        "with tier_target B and delivered tier-B connect/smoke metadata."
     )
 
 
@@ -1301,6 +1390,86 @@ def case_connect_codex_dry_run(ctx: "ValidationHarness") -> str:
     return (
         "connect codex --dry-run prints merged TOML with [mcp_servers.memory-service] to stdout "
         "and does not create or modify the config file on disk."
+    )
+
+
+def case_connect_vscode_dry_run(ctx: "ValidationHarness") -> str:
+    """P6-C19: connect vscode --dry-run prints merged JSON config to stdout without writing the file."""
+    with tempfile.TemporaryDirectory(prefix="p6-vscode-c19-") as tmp:
+        tmp_path = Path(tmp)
+        config_path = tmp_path / "mcp.json"
+        data_dir = str(tmp_path / "data")
+
+        result = _run_connect(
+            CONNECT_VSCODE,
+            [
+                "--project-config", str(config_path),
+                "--project-root", str(REPO_ROOT),
+                "--data-dir", data_dir,
+                "--dry-run",
+            ],
+        )
+        ensure(
+            result.returncode == 0,
+            f"connect vscode --dry-run must exit 0. Got: {result.returncode}. "
+            f"stderr: {result.stderr[:400]}",
+        )
+        ensure(
+            not config_path.exists(),
+            "connect vscode --dry-run must not write the config file.",
+        )
+        stdout = result.stdout.strip()
+        try:
+            printed = json.loads(stdout)
+        except json.JSONDecodeError as exc:
+            raise ValidationFailure(
+                f"connect vscode --dry-run must print valid JSON to stdout. Got: {stdout[:300]}"
+            ) from exc
+        _assert_vscode_server_entry(printed)
+
+    return (
+        "connect vscode --dry-run prints the merged servers JSON to stdout and "
+        "does not create or modify the config file on disk."
+    )
+
+
+def case_connect_gemini_dry_run(ctx: "ValidationHarness") -> str:
+    """P6-C20: connect gemini --dry-run prints merged JSON config to stdout without writing the file."""
+    with tempfile.TemporaryDirectory(prefix="p6-gemini-c20-") as tmp:
+        tmp_path = Path(tmp)
+        config_path = tmp_path / "settings.json"
+        data_dir = str(tmp_path / "data")
+
+        result = _run_connect(
+            CONNECT_GEMINI,
+            [
+                "--config", str(config_path),
+                "--project-root", str(REPO_ROOT),
+                "--data-dir", data_dir,
+                "--dry-run",
+            ],
+        )
+        ensure(
+            result.returncode == 0,
+            f"connect gemini --dry-run must exit 0. Got: {result.returncode}. "
+            f"stderr: {result.stderr[:400]}",
+        )
+        ensure(
+            not config_path.exists(),
+            "connect gemini --dry-run must not write the config file.",
+        )
+        stdout = result.stdout.strip()
+        try:
+            printed = json.loads(stdout)
+        except json.JSONDecodeError as exc:
+            raise ValidationFailure(
+                f"connect gemini --dry-run must print valid JSON to stdout. Got: {stdout[:300]}"
+            ) from exc
+        _assert_mcp_server_entry(printed)
+
+    return (
+        "connect gemini --dry-run prints the merged mcpServers JSON to stdout and "
+        "does not create or modify the config file on disk."
     )
 
 
@@ -1459,6 +1628,19 @@ CONNECT_CASES = [
         "21.4.5, 21.8",
         case_connect_codex_dry_run,
     ),
+    # --- connect vscode / gemini ---
+    (
+        "connect vscode --dry-run prints merged JSON config to stdout without writing the config file.",
+        "Connect CLI",
+        "21.4.5, 21.8",
+        case_connect_vscode_dry_run,
+    ),
+    (
+        "connect gemini --dry-run prints merged JSON config to stdout without writing the config file.",
+        "Connect CLI",
+        "21.4.5, 21.8",
+        case_connect_gemini_dry_run,
+    ),
     # --- unsupported harness ---
     (
         "ai-memory connect with an unsupported harness name exits with code 2.",
@@ -1480,7 +1662,7 @@ CONNECT_CASES = [
         case_catalog_tier_b_cli_harnesses_have_connect_command,
     ),
     (
-        "integrations.yaml P1 tier-D entries carry tier_target B per Section 21.1.",
+        "integrations.yaml P1 entries are delivered at tier B with tier_target B and connect/smoke metadata.",
         "Integration Catalog",
         "21.1, 21.3, 21.8",
         case_catalog_p1_entries_have_tier_target_b,
@@ -1515,6 +1697,24 @@ CONNECT_CASES = [
         "Smoke Scripts",
         "21.5, 21.6, 21.8",
         case_smoke_windsurf,
+    ),
+    (
+        "vscode-copilot-agent smoke script exits 0 (memory_status via MCP stdio + eleven-tool verify).",
+        "Smoke Scripts",
+        "21.5, 21.6, 21.8",
+        case_smoke_vscode_copilot_agent,
+    ),
+    (
+        "copilot-ide smoke script exits 0 (memory_status via MCP stdio + eleven-tool verify).",
+        "Smoke Scripts",
+        "21.5, 21.6, 21.8",
+        case_smoke_copilot_ide,
+    ),
+    (
+        "gemini-cli smoke script exits 0 (memory_status via MCP stdio + eleven-tool verify).",
+        "Smoke Scripts",
+        "21.5, 21.6, 21.8",
+        case_smoke_gemini_cli,
     ),
     # --- MCP backward compatibility ---
     (

@@ -36,6 +36,8 @@ const CONNECT_HARNESSES = {
   cursor: "connect_cursor.py",
   windsurf: "connect_windsurf.py",
   codex: "connect_codex.py",
+  vscode: "connect_vscode.py",
+  gemini: "connect_gemini.py",
 };
 
 function usage() {

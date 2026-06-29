@@ -121,36 +121,43 @@ integrations:
 
   - harness_id: vscode-copilot-agent
     display_name: VS Code + Copilot Agent
-    tier: D
+    tier: B
     tier_target: B
     mechanisms:
       - mcp
-    config_paths: []
-    connect_command: null
-    example_path: null
-    smoke_entrypoint: null
-    docs_path: null
+    config_paths:
+      - .vscode/mcp.json
+      - examples/vscode-copilot-agent/.vscode/mcp.json.sample
+    connect_command: ai-memory connect vscode
+    example_path: examples/vscode-copilot-agent
+    smoke_entrypoint: examples/vscode-copilot-agent/demo/vscode-copilot-smoke.sh
+    docs_path: /docs/integrations/vscode-copilot-agent
 
   - harness_id: copilot-ide
     display_name: Copilot IDE
-    tier: D
+    tier: B
     tier_target: B
     mechanisms:
       - mcp
-    config_paths: []
-    connect_command: null
-    example_path: null
-    smoke_entrypoint: null
-    docs_path: null
+    config_paths:
+      - .vscode/mcp.json
+      - examples/copilot-ide/README.md
+    connect_command: ai-memory connect vscode
+    example_path: examples/copilot-ide
+    smoke_entrypoint: examples/copilot-ide/demo/copilot-ide-smoke.sh
+    docs_path: /docs/integrations/copilot-ide
 
   - harness_id: gemini-cli
     display_name: Gemini CLI
-    tier: D
+    tier: B
     tier_target: B
     mechanisms:
       - mcp
-    config_paths: []
-    connect_command: null
-    example_path: null
-    smoke_entrypoint: null
-    docs_path: null
+    config_paths:
+      - ~/.gemini/settings.json
+      - .gemini/settings.json
+      - examples/gemini-cli/.gemini/settings.json.sample
+    connect_command: ai-memory connect gemini
+    example_path: examples/gemini-cli
+    smoke_entrypoint: examples/gemini-cli/demo/gemini-smoke.sh
+    docs_path: /docs/integrations/gemini-cli

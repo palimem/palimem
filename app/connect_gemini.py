@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+"""Merge memory-service MCP registration into Gemini CLI settings.json."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+from typing import Any
+
+
+SERVER_NAME = "memory-service"
+DEFAULT_DATA_DIR = ".ai-memory/data"
+
+
+def _default_user_config() -> Path:
+    gemini_home = Path(os.environ.get("GEMINI_HOME", Path.home() / ".gemini"))
+    return gemini_home / "settings.json"
+
+
+def _memory_service_entry(data_dir: str, project_root: Path) -> dict[str, Any]:
+    mcp_script = project_root / "components" / "memory-service" / "app" / "scripts" / "memory-service-mcp.js"
+    if not mcp_script.is_file():
+        mcp_script = Path(__file__).resolve().parent / "scripts" / "memory-service-mcp.js"
+    return {
+        "command": "node",
+        "args": [str(mcp_script)],
+        "env": {
+            "MEMORY_SERVICE_DATA_DIR": data_dir,
+        },
+    }
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {}
+    text = path.read_text(encoding="utf-8").strip()
+    if not text:
+        return {}
+    data = json.loads(text)
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} must contain a JSON object.")
+    return data
+
+
+def merge_config(
+    existing: dict[str, Any],
+    entry: dict[str, Any],
+    *,
+    replace: bool,
+) -> dict[str, Any]:
+    config = dict(existing)
+    servers = dict(config.get("mcpServers") or {})
+    if SERVER_NAME in servers and not replace:
+        raise SystemExit(1)
+    servers[SERVER_NAME] = entry
+    config["mcpServers"] = servers
+    return config
+
+
+def write_config(path: Path, config: dict[str, Any], dry_run: bool) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(config, indent=2, ensure_ascii=True) + "\n"
+    if dry_run:
+        print(payload)
+        return
+    path.write_text(payload, encoding="utf-8")
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Register memory-service in Gemini CLI settings.")
+    parser.add_argument(
+        "--config",
+        type=Path,
+        help="Target settings.json (default: ~/.gemini/settings.json).",
+    )
+    parser.add_argument(
+        "--project-config",
+        type=Path,
+        help="Also write project .gemini/settings.json (parent dirs created).",
+    )
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Repository root for resolving memory-service-mcp.js path.",
+    )
+    parser.add_argument(
+        "--data-dir",
+        default=DEFAULT_DATA_DIR,
+        help="Relative or absolute MEMORY_SERVICE_DATA_DIR written into env.",
+    )
+    parser.add_argument("--replace", action="store_true", help="Overwrite existing memory-service entry.")
+    parser.add_argument("--dry-run", action="store_true", help="Print merged JSON instead of writing.")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    target = args.config or _default_user_config()
+    project_root = args.project_root.resolve()
+    data_dir = args.data_dir
+    if not Path(data_dir).is_absolute():
+        data_dir = str((project_root / data_dir).resolve())
+
+    entry = _memory_service_entry(data_dir, project_root)
+    merged = merge_config(_load_json(target), entry, replace=args.replace)
+    write_config(target, merged, args.dry_run)
+
+    if args.project_config:
+        project_merged = merge_config(_load_json(args.project_config), entry, replace=True)
+        write_config(args.project_config, project_merged, args.dry_run)
+
+    if not args.dry_run:
+        print(json.dumps({"ok": True, "config": str(target), "server": SERVER_NAME}))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

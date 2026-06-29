@@ -16,8 +16,10 @@ These files show how to wire `memory-service` into Claude Code for local, stdio-
 | [`session-end-consolidate.js`](./session-end-consolidate.js) | SessionEnd — optional consolidation job |
 | [`demo/polish-smoke.sh`](./demo/polish-smoke.sh) | Smoke test for operator CLIs |
 | [`demo/run-consolidation-cron.sh`](./demo/run-consolidation-cron.sh) | Cron-friendly consolidation wrapper |
-| [`demo/phase4-readiness.sh`](./demo/phase4-readiness.sh) | **Current** readiness gate — validation + integration + profile benchmark |
-| [`demo/phase4-profile-benchmark.sh`](./demo/phase4-profile-benchmark.sh) | Phase 4 profile-engine benchmark (invoked by readiness gate) |
+| [`demo/phase4-readiness.sh`](./demo/phase4-readiness.sh) | Phase 4 readiness gate — validation + integration + profile benchmark |
+| [`demo/phase5-readiness.sh`](./demo/phase5-readiness.sh) | Phase 5 readiness gate — validation + integration + temporal/audit smoke |
+| [`demo/phase6-readiness.sh`](./demo/phase6-readiness.sh) | **Current** release gate — validation + integration + host smokes + benchmarks |
+| [`demo/phase4-profile-benchmark.sh`](./demo/phase4-profile-benchmark.sh) | Phase 4 profile-engine benchmark (invoked by readiness gates) |
 
 Hook CLIs (no MCP required): `app/hook_remember.py`, `app/hook_search.py`.
 
