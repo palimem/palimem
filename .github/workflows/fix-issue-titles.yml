@@ -1,0 +1,26 @@
+name: Fix issue titles
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  strip-good-first-issue-prefix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove "good first issue:" prefix from open issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          prefix='good first issue: '
+          gh issue list --state open --json number,title --limit 100 \
+            | jq -r --arg p "$prefix" '.[] | select(.title | startswith($p)) | "\(.number)\t\(.title)"' \
+            | while IFS=$'\t' read -r number title; do
+              new_title="${title#"$prefix"}"
+              echo "Updating #$number: $new_title"
+              gh issue edit "$number" --title "$new_title"
+            done
