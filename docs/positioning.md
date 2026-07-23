@@ -88,7 +88,7 @@ OKF is **what the project knows** (curated). Palimem is **what the agent believe
 - **Audit** — `memory_query_temporal`, `as_of` recall, `memory_audit_export`, retention and PII controls (operator-gated)
 - **Local-first** — SQLite on disk; no cloud account required for the default path
 
-### Where we lag (v1.7.0)
+### Where we lag (v1.7.x)
 
 - **Install** — [`@palimem/mcp`](https://www.npmjs.com/package/@palimem/mcp) on npm; `npx @palimem/mcp` for MCP hosts without a clone
 - **PyPI** — Python package publish still pending (clone or npx path today)

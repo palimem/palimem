@@ -137,7 +137,7 @@ class StdioMcpServer:
                 "result": {
                     "protocolVersion": "2025-03-26",
                     "capabilities": {"tools": {}},
-                    "serverInfo": {"name": "memory-service", "version": "1.7.0"},
+                    "serverInfo": {"name": "memory-service", "version": "1.7.1"},
                 },
             }
         if method == "notifications/initialized":

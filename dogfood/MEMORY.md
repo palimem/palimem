@@ -3,7 +3,7 @@
 ## Repository layout
 
 - Flat product repo: MCP server and CLI live under `app/`
-- Normative spec: `spec/README.md` v1.7.0 (143 black-box behaviors)
+- Normative spec: `spec/README.md` v1.7.0 (143 black-box behaviors); npm package **1.7.2** (`@palimem/mcp`)
 - Integration catalog: `spec/integrations.yaml` (11 tier A/B harnesses)
 
 ## Validation

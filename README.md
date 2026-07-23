@@ -3,8 +3,8 @@
 Governed local-first memory for coding agents — supersession, scoped recall, and audit export on your machine. SQLite WAL storage; connects to editors via MCP stdio.
 
 **Documentation:** [palimem.com/docs](https://palimem.com/docs/)  
-**npm:** [@palimem/mcp](https://www.npmjs.com/package/@palimem/mcp)  
-**Spec:** [v1.7.0](spec/README.md) · **License:** [Apache-2.0](LICENSE)
+**npm:** [@palimem/mcp](https://www.npmjs.com/package/@palimem/mcp) v1.7.2  
+**Spec:** [v1.7.0](spec/README.md) · **Releases:** [docs/RELEASES.md](docs/RELEASES.md) · **License:** [Apache-2.0](LICENSE)
 
 ## Positioning
 
@@ -96,4 +96,4 @@ bash dogfood/run_automated.sh   # optional maintainer dogfood probes
 | `integrations/` | Integration readiness smokes |
 | `dogfood/` | Optional maintainer dogfood probes and sample memory |
 | `adapters/` | Hermes and OpenClaw plugins |
-| `docs/` | Positioning, OKF bridge design, interop outlook |
+| `docs/` | Positioning, OKF bridge, interop outlook, [release history](docs/RELEASES.md) |
