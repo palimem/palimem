@@ -5,6 +5,12 @@ Local-first memory for coding agents. SQLite WAL storage, MCP stdio server, supe
 **Documentation:** [palimem.com/docs](https://palimem.com/docs/)  
 **Spec:** [v1.7.0](spec/README.md) · **License:** [Apache-2.0](LICENSE)
 
+## Positioning
+
+Palimem is **governed agent memory** — a local runtime (MCP stdio + SQLite WAL) for what agents believe at write time, with supersession, scopes, and audit. It complements interchange formats like [OKF](https://github.com/google/open-knowledge-format) and curated wikis; it does not replace them. MCP and local storage are table stakes; differentiation is spec-backed correctness (143 validation behaviors), not recall@k leaderboards.
+
+See [docs/positioning.md](docs/positioning.md) for category context, the interchange/runtime/org-serving model, and honest lead/lag notes. OKF bridge design: [docs/okf-bridge.md](docs/okf-bridge.md).
+
 ## Install
 
 **Quick start (npx — no clone required):**
@@ -89,3 +95,4 @@ bash dogfood/run_automated.sh   # optional maintainer dogfood probes
 | `integrations/` | Integration readiness smokes |
 | `dogfood/` | Optional maintainer dogfood probes and sample memory |
 | `adapters/` | Hermes and OpenClaw plugins |
+| `docs/` | Positioning, OKF bridge design, interop outlook |
