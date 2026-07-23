@@ -2,13 +2,6 @@ name: Set repository topics
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/set-repo-topics.yml
-
-permissions:
-  administration: write
 
 jobs:
   topics:

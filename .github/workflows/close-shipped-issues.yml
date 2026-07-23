@@ -1,0 +1,22 @@
+name: Close shipped issues
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close v1.7.0 shipped issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for issue in 1 3 4; do
+            if gh issue view "$issue" --json state -q .state | grep -q OPEN; then
+              gh issue close "$issue" --comment "Addressed in v1.7.0 release (main @ 15863db)."
+            fi
+          done
