@@ -1,6 +1,6 @@
 {
   "name": "@palimem/mcp",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Governed local-first memory for coding agents",
   "license": "Apache-2.0",
   "repository": {
