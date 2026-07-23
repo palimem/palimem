@@ -1,0 +1,23 @@
+name: Set repository topics
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/set-repo-topics.yml
+
+permissions:
+  administration: write
+
+jobs:
+  topics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply repository topics
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X PUT "repos/${{ github.repository }}/topics" \
+            -f names='["mcp","ai-agents","memory","claude","cursor","local-first","sqlite","coding-agents","agent-memory","mcp-server"]' \
+            -H "Accept: application/vnd.github.mercy-preview+json"
