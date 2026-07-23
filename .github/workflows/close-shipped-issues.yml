@@ -21,8 +21,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          for issue in 1 3 4; do
+          for issue in 1 2 3 4; do
             if gh issue view "$issue" --json state -q .state | grep -q OPEN; then
-              gh issue close "$issue" --comment "Addressed in v1.7.0 release (main @ 15863db)."
+              gh issue close "$issue" --comment "Addressed in v1.7.0 — verified on palimem.com."
             fi
           done
