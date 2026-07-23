@@ -90,7 +90,8 @@ OKF is **what the project knows** (curated). Palimem is **what the agent believe
 
 ### Where we lag (v1.7.0)
 
-- **Install polish** — `npx github:palimem/palimem` works; npm registry publish and PyPI are still pending
+- **Install** — [`@palimem/mcp`](https://www.npmjs.com/package/@palimem/mcp) on npm; `npx @palimem/mcp` for MCP hosts without a clone
+- **PyPI** — Python package publish still pending (clone or npx path today)
 - **Fleet coordination** — Local-authoritative fleet stub only; no multi-tenant org serving
 - **Protocol export** — OKF, UMP, and Relay bridges are design-stage ([okf-bridge.md](./okf-bridge.md), [interop.md](./interop.md))
 - **Cold-start UX** — Peers like PMB optimize hooks-first onboarding; we optimize correctness and spec depth first

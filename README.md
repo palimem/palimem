@@ -3,6 +3,7 @@
 Local-first memory for coding agents. SQLite WAL storage, MCP stdio server, supersession, scoped recall, and audit export.
 
 **Documentation:** [palimem.com/docs](https://palimem.com/docs/)  
+**npm:** [@palimem/mcp](https://www.npmjs.com/package/@palimem/mcp)  
 **Spec:** [v1.7.0](spec/README.md) · **License:** [Apache-2.0](LICENSE)
 
 ## Positioning
@@ -16,15 +17,15 @@ See [docs/positioning.md](docs/positioning.md) for category context, the interch
 **Quick start (npx — no clone required):**
 
 ```bash
-npx github:palimem/palimem ai-memory connect cursor \
+npx @palimem/mcp ai-memory connect cursor \
   --project-root "$(pwd)" \
   --launcher npx \
   --data-dir .ai-memory/data
 ```
 
-Requires Node.js ≥ 18 and Python 3.10+. The connect helper writes an MCP entry that runs `npx -y github:palimem/palimem palimem-mcp`.
+Requires Node.js ≥ 18 and Python 3.10+. The connect helper writes an MCP entry that runs `npx -y @palimem/mcp`.
 
-Once published to npm, `npx @palimem/mcp` is equivalent.
+Fallback without npm registry: `npx github:palimem/palimem` (same CLI, pulls from GitHub).
 
 **From a clone (contributors / offline):**
 
@@ -53,7 +54,7 @@ python3 app/run_production_stdio_server.py
 Or:
 
 ```bash
-npx github:palimem/palimem palimem-mcp
+npx @palimem/mcp
 ```
 
 ## Benchmarks

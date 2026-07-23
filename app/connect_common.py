@@ -6,8 +6,6 @@ from pathlib import Path
 from typing import Any
 
 NPM_PACKAGE = "@palimem/mcp"
-NPX_PACKAGE = "github:palimem/palimem"
-NPX_BIN = "palimem-mcp"
 DEFAULT_DATA_DIR = ".ai-memory/data"
 
 
@@ -47,7 +45,7 @@ def memory_service_entry(
     if launcher == "npx":
         entry: dict[str, Any] = {
             "command": "npx",
-            "args": ["-y", NPX_PACKAGE, NPX_BIN],
+            "args": ["-y", NPM_PACKAGE],
             "env": {"MEMORY_SERVICE_DATA_DIR": data_dir},
         }
     else:

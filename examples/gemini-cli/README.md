@@ -15,7 +15,7 @@ Register **memory-service** in the [Gemini CLI](https://github.com/google-gemini
 **npx (no clone):**
 
 ```bash
-npx github:palimem/palimem ai-memory connect gemini \
+npx @palimem/mcp ai-memory connect gemini \
   --project-root "$(pwd)" \
   --launcher npx \
   --data-dir .ai-memory/data
@@ -35,7 +35,7 @@ Default target: `~/.gemini/settings.json`. Set `GEMINI_HOME` to override the con
 ### Project-level config
 
 ```bash
-npx github:palimem/palimem ai-memory connect gemini \
+npx @palimem/mcp ai-memory connect gemini \
   --project-root "$(pwd)" \
   --project-config .gemini/settings.json \
   --launcher npx \
@@ -50,7 +50,7 @@ npx github:palimem/palimem ai-memory connect gemini \
 | `--project-config PATH` | Also write project `.gemini/settings.json` |
 | `--project-root PATH` | Workspace root for resolving data dir (default: `$PWD`) |
 | `--data-dir PATH` | `MEMORY_SERVICE_DATA_DIR` (default: `.ai-memory/data`) |
-| `--launcher local\|npx` | Use local `node` script or `npx github:palimem/palimem palimem-mcp` (default: `local`) |
+| `--launcher local\|npx` | Use local `node` script or `npx @palimem/mcp` (default: `local`) |
 | `--replace` | Overwrite existing `memory-service` entry |
 | `--dry-run` | Print merged JSON without writing |
 
@@ -63,7 +63,7 @@ With `--launcher npx`, the merged entry uses:
 ```json
 {
   "command": "npx",
-  "args": ["-y", "github:palimem/palimem", "palimem-mcp"],
+  "args": ["-y", "@palimem/mcp"],
   "env": {
     "MEMORY_SERVICE_DATA_DIR": "/absolute/path/to/.ai-memory/data"
   }
