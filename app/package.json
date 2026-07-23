@@ -1,5 +1,5 @@
 {
-  "name": "@gem-orchestration/memory-service-mcp",
+  "name": "@palimem/memory-service-mcp",
   "version": "1.7.0",
   "private": true,
   "description": "Thin launch wrapper and operator CLI for memory-service",

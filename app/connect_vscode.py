@@ -9,22 +9,10 @@ from pathlib import Path
 from typing import Any
 
 
+from connect_common import DEFAULT_DATA_DIR, add_launcher_arg, memory_service_entry
+
+
 SERVER_NAME = "memory-service"
-DEFAULT_DATA_DIR = ".ai-memory/data"
-
-
-def _memory_service_entry(data_dir: str, project_root: Path) -> dict[str, Any]:
-    mcp_script = project_root / "components" / "memory-service" / "app" / "scripts" / "memory-service-mcp.js"
-    if not mcp_script.is_file():
-        mcp_script = Path(__file__).resolve().parent / "scripts" / "memory-service-mcp.js"
-    return {
-        "type": "stdio",
-        "command": "node",
-        "args": [str(mcp_script)],
-        "env": {
-            "MEMORY_SERVICE_DATA_DIR": data_dir,
-        },
-    }
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -83,6 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--replace", action="store_true", help="Overwrite existing memory-service entry.")
     parser.add_argument("--dry-run", action="store_true", help="Print merged JSON instead of writing.")
+    add_launcher_arg(parser)
     return parser
 
 
@@ -94,7 +83,12 @@ def main(argv: list[str] | None = None) -> int:
     if not Path(data_dir).is_absolute():
         data_dir = str((project_root / data_dir).resolve())
 
-    entry = _memory_service_entry(data_dir, project_root)
+    entry = memory_service_entry(
+        data_dir,
+        project_root,
+        launcher=args.launcher,
+        extra={"type": "stdio"},
+    )
     try:
         merged = merge_config(_load_json(target), entry, replace=args.replace)
     except SystemExit:

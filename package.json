@@ -1,0 +1,43 @@
+{
+  "name": "@palimem/mcp",
+  "version": "1.7.0",
+  "description": "Local-first MCP memory server for coding agents",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palimem/palimem.git"
+  },
+  "homepage": "https://palimem.com/docs",
+  "bugs": {
+    "url": "https://github.com/palimem/palimem/issues"
+  },
+  "bin": {
+    "palimem-mcp": "app/scripts/memory-service-mcp.js",
+    "memory-service-mcp": "app/scripts/memory-service-mcp.js",
+    "ai-memory": "app/scripts/ai-memory.js"
+  },
+  "files": [
+    "app/scripts/",
+    "app/memory_service/",
+    "app/*.py",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "ai-agents",
+    "memory",
+    "claude",
+    "cursor",
+    "sqlite",
+    "coding-agents",
+    "agent-memory",
+    "mcp-server"
+  ]
+}

@@ -1,0 +1,12 @@
+**/__pycache__/**
+**/*.pyc
+benchmarks/
+tests/
+examples/
+spec/
+integrations/
+dogfood/
+adapters/
+.github/
+pipelines/
+docs/

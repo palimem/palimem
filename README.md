@@ -7,18 +7,35 @@ Local-first memory for coding agents. SQLite WAL storage, MCP stdio server, supe
 
 ## Install
 
+**Quick start (npx — no clone required):**
+
+```bash
+npx github:palimem/palimem ai-memory connect cursor \
+  --project-root "$(pwd)" \
+  --launcher npx \
+  --data-dir .ai-memory/data
+```
+
+Requires Node.js ≥ 18 and Python 3.10+. The connect helper writes an MCP entry that runs `npx -y github:palimem/palimem palimem-mcp`.
+
+Once published to npm, `npx @palimem/mcp` is equivalent.
+
+**From a clone (contributors / offline):**
+
 ```bash
 git clone https://github.com/palimem/palimem.git
 cd palimem/app && npm install && cd ..
-```
-
-Connect an editor (Cursor example):
-
-```bash
 node app/scripts/ai-memory.js connect cursor --project-root "$(pwd)"
 ```
 
-See [getting started](https://palimem.com/docs/getting-started) for Claude Code, Copilot, Codex, and other integrations.
+**Claude Code plugin:**
+
+```bash
+/plugin marketplace add palimem
+/plugin install memory-service@palimem
+```
+
+See [getting started](https://palimem.com/docs/getting-started) for Copilot, Codex, Gemini CLI, and other integrations.
 
 ## Run
 
@@ -30,8 +47,26 @@ python3 app/run_production_stdio_server.py
 Or:
 
 ```bash
-node app/scripts/memory-service-mcp.js
+npx github:palimem/palimem palimem-mcp
 ```
+
+## Benchmarks
+
+Research benchmarks (informative, not normative) measure persona recall, agent-task utility, and search latency. Run locally:
+
+```bash
+python3 benchmarks/run_benchmarks.py --strict
+```
+
+Latest CI run on spec v1.7.0 (strict mode):
+
+| Suite | Result | Notes |
+|-------|--------|-------|
+| Persona recall | pass | Expanded profile+search meets USER.md-only baseline; supersession probes pass |
+| Agent tasks | pass | 7/7 task-shaped recall scenarios |
+| Latency sweep | pass | `memory_search` p95 ≤ 10.1 ms at corpus sizes 100 / 500 / 1000 |
+
+Full artifact: `benchmarks/artifacts/latest-benchmark-results.json`. See [benchmarks/README.md](benchmarks/README.md) for suite details.
 
 ## Validate
 

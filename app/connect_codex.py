@@ -12,8 +12,10 @@ from pathlib import Path
 from typing import Any
 
 
+from connect_common import DEFAULT_DATA_DIR, add_launcher_arg, memory_service_entry
+
+
 SERVER_NAME = "memory-service"
-DEFAULT_DATA_DIR = ".ai-memory/data"
 
 # Section header in TOML
 _MCP_SECTION = f"mcp_servers.{SERVER_NAME}"
@@ -22,20 +24,6 @@ _MCP_SECTION = f"mcp_servers.{SERVER_NAME}"
 def _default_global_config() -> Path:
     codex_home = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex"))
     return codex_home / "config.toml"
-
-
-def _memory_service_entry(data_dir: str, project_root: Path) -> dict[str, Any]:
-    mcp_script = project_root / "components" / "memory-service" / "app" / "scripts" / "memory-service-mcp.js"
-    if not mcp_script.is_file():
-        mcp_script = Path(__file__).resolve().parent / "scripts" / "memory-service-mcp.js"
-    return {
-        "enabled": True,
-        "command": "node",
-        "args": [str(mcp_script)],
-        "env": {
-            "MEMORY_SERVICE_DATA_DIR": data_dir,
-        },
-    }
 
 
 # ---------------------------------------------------------------------------
@@ -155,6 +143,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print merged TOML instead of writing.",
     )
+    add_launcher_arg(parser)
     return parser
 
 
@@ -173,7 +162,12 @@ def main(argv: list[str] | None = None) -> int:
     else:
         target = _default_global_config()
 
-    entry = _memory_service_entry(data_dir, project_root)
+    entry = memory_service_entry(
+        data_dir,
+        project_root,
+        launcher=args.launcher,
+        extra={"enabled": True},
+    )
     existing_text = _load_toml(target)
 
     try:
