@@ -5,13 +5,13 @@
     "url": "https://github.com/palimem/palimem"
   },
   "metadata": {
-    "description": "Governed local memory for coding agents — MCP server and Claude Code hooks",
+    "description": "Governed local-first memory for coding agents — supersession, scoped recall, and Claude Code hooks",
     "version": "1.7.0"
   },
   "plugins": [
     {
       "name": "memory-service",
-      "description": "Eleven-tool MCP memory server with SessionStart, Stop, PreCompact, PostToolUseFailure, and SessionEnd hooks.",
+      "description": "Governed memory for Claude Code — supersession, scoped recall, and lifecycle hooks (SessionStart, Stop, PreCompact, PostToolUseFailure, SessionEnd). Eleven spec-backed MCP tools.",
       "version": "1.7.0",
       "author": {
         "name": "Palimem contributors",

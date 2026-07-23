@@ -1,6 +1,6 @@
 # Palimem
 
-Local-first memory for coding agents. SQLite WAL storage, MCP stdio server, supersession, scoped recall, and audit export.
+Governed local-first memory for coding agents — supersession, scoped recall, and audit export on your machine. SQLite WAL storage; connects to editors via MCP stdio.
 
 **Documentation:** [palimem.com/docs](https://palimem.com/docs/)  
 **npm:** [@palimem/mcp](https://www.npmjs.com/package/@palimem/mcp)  
@@ -38,8 +38,8 @@ node app/scripts/ai-memory.js connect cursor --project-root "$(pwd)"
 **Claude Code plugin:**
 
 ```bash
-/plugin marketplace add palimem
-/plugin install memory-service@palimem
+claude plugin marketplace add palimem/palimem
+claude plugin install memory-service@palimem
 ```
 
 See [getting started](https://palimem.com/docs/getting-started) for Copilot, Codex, Gemini CLI, and other integrations.
@@ -89,7 +89,7 @@ bash dogfood/run_automated.sh   # optional maintainer dogfood probes
 
 | Path | Purpose |
 |------|---------|
-| `app/` | MCP server and `ai-memory` CLI |
+| `app/` | Governed memory runtime, MCP stdio entrypoint, and `ai-memory` CLI |
 | `spec/` | Normative behavior contract |
 | `tests/` | Black-box validation (143 behaviors) |
 | `examples/` | Editor wiring examples |
