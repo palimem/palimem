@@ -1,5 +1,7 @@
 name: Close shipped issues
 
+# Closes issues shipped in v1.7.0 when dispatched or when this file changes on main.
+
 on:
   workflow_dispatch:
   push:
